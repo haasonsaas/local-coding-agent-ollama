@@ -372,14 +372,41 @@ class LocalCodingAgent:
 
 def main():
     """Main entry point"""
-    agent = LocalCodingAgent()
+    import argparse
     
-    if len(sys.argv) > 1:
+    parser = argparse.ArgumentParser(description="Local Coding Agent with Ollama")
+    parser.add_argument("--tui", action="store_true", help="Launch TUI interface")
+    parser.add_argument("command", nargs="*", help="Command to execute (if not using TUI)")
+    
+    args = parser.parse_args()
+    
+    if args.tui:
+        # Launch TUI mode
+        try:
+            import asyncio
+            try:
+                from agent_tui import run_tui
+            except ImportError:
+                # Try importing textual first to give better error message
+                import textual
+                raise ImportError("Could not import TUI module")
+            print("🚀 Launching TUI interface...")
+            asyncio.run(run_tui())
+        except ImportError as e:
+            if "textual" in str(e) or "No module named 'textual'" in str(e):
+                print("❌ TUI dependencies not found. Install with: pip install textual")
+            else:
+                print(f"❌ TUI import error: {e}")
+        except KeyboardInterrupt:
+            print("\n👋 Goodbye!")
+    elif args.command:
         # Process single command
-        command = " ".join(sys.argv[1:])
+        agent = LocalCodingAgent()
+        command = " ".join(args.command)
         print(agent.process_request(command))
     else:
         # Interactive mode
+        agent = LocalCodingAgent()
         agent.run_interactive()
 
 if __name__ == "__main__":

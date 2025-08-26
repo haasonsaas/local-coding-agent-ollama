@@ -115,7 +115,7 @@ This local coding agent proves that you don't need to sacrifice privacy, pay ong
 4. **Set up Python environment**:
    ```bash
    python3 -m venv .venv && source .venv/bin/activate
-   pip install openai python-dotenv
+   pip install -r requirements.txt
    ```
 
 5. **Load environment**:
@@ -125,18 +125,34 @@ This local coding agent proves that you don't need to sacrifice privacy, pay ong
 
 ## Usage
 
-### Interactive Mode
+### 🎨 TUI Mode (Recommended)
+Beautiful terminal interface with dark theme and organized panels:
+```bash
+source .venv/bin/activate
+python agent_ollama.py --tui
+```
+
+**TUI Features:**
+- 📁 **File Explorer**: Browse and manage workspace files
+- 💬 **Chat Interface**: Interactive conversation with the agent
+- 📊 **Status Panel**: Real-time agent status and statistics
+- 🔧 **Tool Outputs**: Monitor tool execution and results
+- ⌨️ **Keyboard Shortcuts**: Efficient navigation and controls
+
+### 💻 Interactive CLI Mode
+Traditional command-line interface:
 ```bash
 source .venv/bin/activate
 python agent_ollama.py
 ```
 
-### Single Command
+### ⚡ Single Command Mode
+Execute one-off commands:
 ```bash
 python agent_ollama.py "create a simple Python hello world script"
 ```
 
-### Oracle Mode (reasoning assistant)
+### 🔮 Oracle Mode (reasoning assistant)
 In interactive mode, use `/oracle <question>` to consult the reasoning model:
 ```
 /oracle How should I structure a REST API in Python?
