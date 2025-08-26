@@ -66,8 +66,7 @@ class ChatPanel(Container):
     
     def compose(self) -> ComposeResult:
         yield Static("💬 Chat", classes="panel-title")
-        with VerticalScroll(id="chat_container"):
-            yield RichLog(id="chat_history", markup=True)
+        yield RichLog(id="chat_history", markup=True)
         yield Horizontal(
             Input(placeholder="Ask me anything about coding...", id="chat_input"),
             Button("Send", variant="primary", id="send_button"),
@@ -142,6 +141,7 @@ class AgentTUI(App):
         width: 45%;
         background: #0f0f0f;
         padding: 1 2;
+        layout: vertical;
     }
     
     #right_panel {
@@ -175,7 +175,6 @@ class AgentTUI(App):
         height: 1fr;
         background: #0a0a0a;
         border: solid #333;
-
         margin-bottom: 1;
         scrollbar-color: #404040 #1a1a1a;
         scrollbar-color-hover: #525252 #1a1a1a;
@@ -185,23 +184,24 @@ class AgentTUI(App):
         height: 4;
         background: #171717;
         padding: 1;
-        border: solid #333;
-
+        border: solid #4ade80;
+        dock: bottom;
     }
     
     #chat_input {
         width: 1fr;
         margin-right: 2;
         background: #262626;
-        color: #e6e6e6;
-        border: solid #404040;
-
+        color: #ffffff;
+        border: solid #4ade80;
         padding: 1;
+        text-style: bold;
     }
     
     #chat_input:focus {
-        border: solid #4ade80;
+        border: solid #22c55e;
         background: #1a1a1a;
+        color: #ffffff;
     }
     
     #send_button {
@@ -530,9 +530,6 @@ class AgentTUI(App):
             # Process with agent
             response = await asyncio.to_thread(self.agent.process_request, user_message)
             
-            # Remove thinking indicator
-            chat_history.clear_last()
-            
             # Show agent response in a styled panel
             response_panel = Panel(
                 Text.from_markup(f"[white]{response}[/white]"),
@@ -550,7 +547,6 @@ class AgentTUI(App):
             self.update_stats()
             
         except Exception as e:
-            chat_history.clear_last()
             error_panel = Panel(
                 Text.from_markup(f"[red]{str(e)}[/red]"),
                 title="[bold red]❌ Error[/bold red]",
