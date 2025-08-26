@@ -191,8 +191,8 @@ class AgentTUI(App):
     #chat_input {
         width: 1fr;
         margin-right: 2;
-        background: #262626;
-        color: #ffffff;
+        background: #ffffff;
+        color: #000000;
         border: solid #4ade80;
         padding: 1;
         text-style: bold;
@@ -200,8 +200,8 @@ class AgentTUI(App):
     
     #chat_input:focus {
         border: solid #22c55e;
-        background: #1a1a1a;
-        color: #ffffff;
+        background: #ffffff;
+        color: #000000;
     }
     
     #send_button {
