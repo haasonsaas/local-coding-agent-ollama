@@ -183,13 +183,15 @@ class AgentTUI(App):
     }
     
     #input_container {
-        height: 4;
+        height: 3;
+        width: 100%;
+        min-width: 20;
         background: #171717;
         padding: 1;
         border: solid #4ade80;
     }
     
-    #chat_input {
+    #center_panel #chat_input {
         width: 1fr;
         margin-right: 2;
         background: #ffffff;
@@ -199,8 +201,8 @@ class AgentTUI(App):
         text-style: bold;
     }
     
-    #chat_input:focus {
-        border: solid #22c55e;
+    #center_panel #chat_input:focus {
+        border: heavy #22c55e;
         background: #ffffff;
         color: #000000;
     }
@@ -483,8 +485,10 @@ class AgentTUI(App):
         
         chat_history.write(welcome_panel)
         
-        # Focus on input
-        self.query_one("#chat_input", Input).focus()
+        # CRITICAL: Focus input after DOM is fully built
+        self.call_after_refresh(
+            lambda: self.query_one("#chat_input", Input).focus()
+        )
     
     async def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button presses"""
@@ -496,6 +500,14 @@ class AgentTUI(App):
         if event.input.id == "chat_input":
             await self.send_message()
     
+    async def on_click(self, event: events.Click) -> None:
+        """Handle clicks - ensure input gets focus"""
+        # Always focus the input when user clicks in the center panel
+        try:
+            self.query_one("#chat_input", Input).focus()
+        except Exception:
+            pass  # Input might not exist yet
+    
     async def send_message(self) -> None:
         """Send a message to the agent"""
         chat_input = self.query_one("#chat_input", Input)
@@ -504,10 +516,13 @@ class AgentTUI(App):
         
         user_message = chat_input.value.strip()
         if not user_message:
+            # Keep focus on input even if empty
+            chat_input.focus()
             return
         
-        # Clear input
+        # Clear input and maintain focus
         chat_input.value = ""
+        chat_input.focus()
         
         # Show user message in a styled panel
         user_panel = Panel(
@@ -556,6 +571,10 @@ class AgentTUI(App):
             )
             chat_history.write(error_panel)
             tool_log.write(Text.from_markup(f"[red]❌ Error:[/red] {str(e)}"))
+        
+        # Always ensure input has focus after processing
+        finally:
+            chat_input.focus()
     
     def update_stats(self) -> None:
         """Update the stats table"""
