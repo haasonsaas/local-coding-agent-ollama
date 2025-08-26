@@ -139,6 +139,7 @@ class AgentTUI(App):
     
     #center_panel {
         width: 45%;
+        height: 100%;
         background: #0f0f0f;
         padding: 1 2;
         layout: vertical;
@@ -173,6 +174,7 @@ class AgentTUI(App):
     /* === CHAT INTERFACE === */
     #chat_history {
         height: 1fr;
+        overflow-y: auto;
         background: #0a0a0a;
         border: solid #333;
         margin-bottom: 1;
@@ -185,7 +187,6 @@ class AgentTUI(App):
         background: #171717;
         padding: 1;
         border: solid #4ade80;
-        dock: bottom;
     }
     
     #chat_input {
